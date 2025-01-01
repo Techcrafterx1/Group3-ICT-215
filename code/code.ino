@@ -36,30 +36,53 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
+  steerLeft();
+  delay(1000);
+  steerRight();
+  delay(1000);
+  stop();
+  delay(1000);
+  goForward();
+  delay(1000);
+  goBackward();
+  delay(1000);
+  stop();
+  delay(1000);
+
 }
 
 
 void steerLeft(){
+    digitalWrite(l1, 1);
+    digitalWrite(l2, 0);
     digitalWrite(m1L, 1);
     digitalWrite(m1R, 0);
   };
   
   void steerRight(){
+    digitalWrite(l1, 1);
+    digitalWrite(l2, 0);
     digitalWrite(m1L, 0);
     digitalWrite(m1R, 1);
   };
 
   void goForward() {
+    digitalWrite(l1, 1);
+    digitalWrite(l2, 0);
     digitalWrite(m2F, 1);
     digitalWrite(m2B, 0);
   };
   
   void goBackward() {
+    digitalWrite(l1, 1);
+    digitalWrite(l2, 0);
     digitalWrite(m2F, 0);
     digitalWrite(m2B, 1);
   };
 
   void stop() {
+    digitalWrite(l1, 0);
+    digitalWrite(l2, 1);
     digitalWrite(m1L, 0);
     digitalWrite(m1R, 0);
     digitalWrite(m2F, 0);
