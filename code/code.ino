@@ -1,13 +1,3 @@
-#include <stdint.h>
-
-#include <avr/io.h>
-
-#include <util/twi.h>
-
-#include <util/delay.h>
-
-#include <avr/pgmspace.h>
-
 //m1 is the direction motor
 //m2 is the power motor
 // L is left 
@@ -35,20 +25,18 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  start();
+  delay(1500);
   steerLeft();
-  delay(1000);
+  delay(1500);
   steerRight();
-  delay(1000);
-  stop();
-  delay(1000);
+  delay(1500);
   goForward();
-  delay(1000);
+  delay(1500);
   goBackward();
-  delay(1000);
+  delay(1500);
   stop();
-  delay(1000);
-
+  delay(1500);
 }
 
 
@@ -87,4 +75,9 @@ void steerLeft(){
     digitalWrite(m1R, 0);
     digitalWrite(m2F, 0);
     digitalWrite(m2B, 0);
+  }
+
+  void start() {
+    digitalWrite(l1, 1);
+    digitalWrite(l2, 0);
   }
