@@ -1,83 +1,67 @@
-//m1 is the direction motor
-//m2 is the power motor
-// L is left 
-// R is right
-// F is forward
-// B is Backward
-
-int m1L = 13; 
-int m1R = 12; 
-int m2F = 11; 
-int m2B = 10; 
-int l1 = 9; //l1 is the green LED
-int l2 = 8; //l2 is the red LED
+// Pin Definitions
+#define TRIG_PIN 4
+#define ECHO_PIN 5
+#define MOTOR_IN1 9
+#define MOTOR_IN2 10
+#define BUZZER_PIN 11
+#define LED_PIN 12
 
 void setup() {
-  // put your setup code here, to run once:
+  // Motor Pins
+  pinMode(MOTOR_IN1, OUTPUT);
+  pinMode(MOTOR_IN2, OUTPUT);
 
-  pinMode(m1L, OUTPUT);
-  pinMode(m1R, OUTPUT);
-  pinMode(m2F, OUTPUT);
-  pinMode(m2B, OUTPUT);
-  pinMode(l1, OUTPUT);
-  pinMode(l2, OUTPUT);
+  // Ultrasonic Sensor Pins
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  // Buzzer and LED Pins
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+
+  // Serial Monitor for Debugging
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  start();
-  delay(1500);
-  steerLeft();
-  delay(1500);
-  steerRight();
-  delay(1500);
-  goForward();
-  delay(1500);
-  goBackward();
-  delay(1500);
-  stop();
-  delay(1500);
+  // Variables
+  long duration, distance;
+
+  // Ensure proper trigger pulse
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(15);  // Set to 15 µs for added margin
+  digitalWrite(TRIG_PIN, LOW);
+
+  // Measure echo duration
+  duration = pulseIn(ECHO_PIN, HIGH);
+
+  // Calculate distance in cm
+  if (duration == 0) {
+    distance = 400; // Max distance when no echo detected
+  } else {
+    distance = duration * 0.034 / 2;
+  }
+
+  // Debug output
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  // Obstacle detection logic
+  if (distance < 20) {
+    // Stop motor and sound buzzer
+    digitalWrite(MOTOR_IN1, LOW);
+    digitalWrite(MOTOR_IN2, LOW);
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(500);
+    digitalWrite(BUZZER_PIN, LOW);
+  } else {
+    // Move forward and turn on LED
+    digitalWrite(MOTOR_IN1, HIGH);
+    digitalWrite(MOTOR_IN2, LOW);
+    digitalWrite(LED_PIN, HIGH);
+  }
+
+  delay(100);
 }
-
-
-void steerLeft(){
-    digitalWrite(l1, 1);
-    digitalWrite(l2, 0);
-    digitalWrite(m1L, 1);
-    digitalWrite(m1R, 0);
-  };
-  
-  void steerRight(){
-    digitalWrite(l1, 1);
-    digitalWrite(l2, 0);
-    digitalWrite(m1L, 0);
-    digitalWrite(m1R, 1);
-  };
-
-  void goForward() {
-    digitalWrite(l1, 1);
-    digitalWrite(l2, 0);
-    digitalWrite(m2F, 1);
-    digitalWrite(m2B, 0);
-  };
-  
-  void goBackward() {
-    digitalWrite(l1, 1);
-    digitalWrite(l2, 0);
-    digitalWrite(m2F, 0);
-    digitalWrite(m2B, 1);
-  };
-
-  void stop() {
-    digitalWrite(l1, 0);
-    digitalWrite(l2, 1);
-    digitalWrite(m1L, 0);
-    digitalWrite(m1R, 0);
-    digitalWrite(m2F, 0);
-    digitalWrite(m2B, 0);
-  }
-
-  void start() {
-    digitalWrite(l1, 1);
-    digitalWrite(l2, 0);
-  }
